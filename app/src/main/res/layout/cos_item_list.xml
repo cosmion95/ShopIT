@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/cos_item_image"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/cos_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/cos_item_image"
+            android:maxLines="3"
+            android:paddingLeft="5dp"
+            tools:text="Lenovo Thinkpad 13"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/cos_item_qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/cos_item_decrease_qty"
+            android:layout_alignBottom="@+id/cos_item_decrease_qty"
+            android:layout_toEndOf="@+id/cos_item_image"
+            android:paddingLeft="5dp"
+            tools:text="Cantitate: 5" />
+
+        <Button
+            android:id="@+id/cos_item_decrease_qty"
+            style="@android:style/Widget.DeviceDefault.Light.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:layout_toRightOf="@id/cos_item_qty"
+            android:layout_below="@id/cos_item_name"/>
+
+        <Button
+            android:id="@+id/cos_item_increase_qty"
+            style="@android:style/Widget.DeviceDefault.Light.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:layout_toRightOf="@id/cos_item_decrease_qty"
+            android:layout_below="@id/cos_item_name"/>
+
+        <TextView
+            android:id="@+id/cos_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1199.99 RON"
+            android:layout_below="@id/cos_item_decrease_qty"
+            android:layout_toRightOf="@id/cos_item_image"
+            android:padding="5dp"/>
+
+        <Button
+            android:id="@+id/cos_item_remove_from_cos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cos_item_price"
+            android:layout_marginStart="13dp"
+            android:layout_toEndOf="@+id/cos_item_image"
+            android:text="Sterge din cos" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>
