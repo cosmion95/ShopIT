@@ -113,6 +113,7 @@ public class DataProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ITEMS:
+                //insert in item in the items table
                 return insertItem(uri, contentValues);
             case COS:
                 //insert an item in the cos table
@@ -125,7 +126,6 @@ public class DataProvider extends ContentProvider {
     //insert a new item into the database with the given content values and return the new content uri for that specific row
     private Uri insertItem(Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
-        //check and validate the data we receive
 
         //initialize the database
         SQLiteDatabase database = itemDBHelper.getWritableDatabase();
