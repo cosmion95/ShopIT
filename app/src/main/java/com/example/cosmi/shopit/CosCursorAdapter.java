@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.example.cosmi.shopit.cosData.CosContract;
+import com.example.cosmi.shopit.data.CosContract;
 
 /**
  * Created by cosmi on 3/28/2018.
@@ -37,10 +37,10 @@ public class CosCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         //find all the list views
-        //ImageView imageView = (ImageView) view.findViewById(R.id.cos_item_image);
-        TextView nameTextView = (TextView) view.findViewById(R.id.cos_item_name);
-        TextView qtyTextView = (TextView) view.findViewById(R.id.cos_item_qty);
-        TextView priceTextView = (TextView) view.findViewById(R.id.cos_item_price);
+        //ImageView imageView = view.findViewById(R.id.cos_item_image);
+        TextView nameTextView = view.findViewById(R.id.cos_item_name);
+        TextView qtyTextView = view.findViewById(R.id.cos_item_qty);
+        TextView priceTextView =  view.findViewById(R.id.cos_item_price);
 
         //find all the item information from the db using the cursor
         int namePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_NAME);

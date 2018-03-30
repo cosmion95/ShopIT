@@ -1,4 +1,4 @@
-package com.example.cosmi.shopit.cosData;
+package com.example.cosmi.shopit.data;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -12,14 +12,14 @@ public final class CosContract {
 
     public static final String CONTENT_AUTHORITY = "com.example.cosmi.shopit";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final Uri COS_BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-    public static final String PATH_ITEMS = "cos";
+    public static final String PATH_COS = "cos";
 
     public static final class CosEntry implements BaseColumns {
 
-        public static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMS;
-        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ITEMS;
+        public static final String CONTENT_LIST_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_COS;
+        public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_COS;
 
         public static final String TABLE_NAME = "cos";
 
@@ -30,6 +30,6 @@ public final class CosContract {
         public static final String COLUMN_QTY = "qty";
         public static final String COLUMN_IMAGE = "image";
 
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_ITEMS);
+        public static final Uri COS_CONTENT_URI = Uri.withAppendedPath(COS_BASE_CONTENT_URI, PATH_COS);
     }
 }

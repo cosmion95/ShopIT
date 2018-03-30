@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import com.example.cosmi.shopit.cosData.CosContract;
+import com.example.cosmi.shopit.data.CosContract;
 
 /**
  * Created by cosmi on 3/29/2018.
@@ -31,8 +31,9 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         ListView listView = findViewById(R.id.cos_list_view);
 
         cosCursorAdapter = new CosCursorAdapter(this, null);
+        listView.setAdapter(cosCursorAdapter);
 
-
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
                 CosContract.CosEntry.COLUMN_PRICE,
                 CosContract.CosEntry.COLUMN_IMAGE
         };
-        return new CursorLoader(this, CosContract.CosEntry.CONTENT_URI, projection, null, null, null);
+        return new CursorLoader(this, CosContract.CosEntry.COS_CONTENT_URI, projection, null, null, null);
     }
 
     @Override
@@ -71,6 +72,7 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         values.put(CosContract.CosEntry.COLUMN_NAME, "HP ELITEBOOK 14 G3");
         values.put(CosContract.CosEntry.COLUMN_PRICE, 2999);
         values.put(CosContract.CosEntry.COLUMN_QTY, 5);
+        values.put(CosContract.CosEntry.COLUMN_USERID, 2);
 
         return values;
     }
@@ -79,7 +81,7 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
             case R.id.action_insert_cos_dummy_data:
-                getContentResolver().insert(CosContract.CosEntry.CONTENT_URI, getContentValues());
+                getContentResolver().insert(CosContract.CosEntry.COS_CONTENT_URI, getContentValues());
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.cosmi.shopit.data.ItemContract.ItemEntry;
-import com.example.cosmi.shopit.cosData.CosContract.CosEntry;
+import com.example.cosmi.shopit.data.CosContract.CosEntry;
 
 /**
  * Created by cosmi on 3/28/2018.

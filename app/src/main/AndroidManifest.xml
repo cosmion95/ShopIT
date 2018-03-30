@@ -33,13 +33,10 @@
                 android:value=".CatalogActivity" />
         </activity>
         <provider
-            android:authorities="com.example.cosmi.shopit"
-            android:name=".data.ItemProvider"
-            android:exported="false" />
-        <provider
-            android:authorities="com.example.cosmi.shopit"
-            android:name=".cosData.CosProvider"
-            android:exported="false" />
+        android:authorities="com.example.cosmi.shopit"
+        android:name=".data.DataProvider"
+        android:exported="false" />
+
     </application>
 
 </manifest>

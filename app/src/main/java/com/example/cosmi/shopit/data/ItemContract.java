@@ -11,7 +11,7 @@ public final class ItemContract {
 
     public static final String CONTENT_AUTHORITY = "com.example.cosmi.shopit";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+    public static final Uri ITEM_BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_ITEMS = "items";
 
@@ -37,7 +37,7 @@ public final class ItemContract {
         public static final int CATEOGRY_HEADPHONES = 4;
         public static final int CATEOGRY_MONITORS = 5;
 
-        public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_ITEMS);
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(ITEM_BASE_CONTENT_URI, PATH_ITEMS);
 
         public static boolean isValidCategory(int category) {
             if (category == CATEOGRY_LAPTOPS || category == CATEGORY_DESKTOPS || category == CATEOGRY_MICE ||
