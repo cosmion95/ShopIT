@@ -4,15 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".CatalogActivity">
 
+
+    <item
+        android:id="@+id/action_login"
+        android:title="Login"
+        app:showAsAction="always"/>
+
     <item
         android:id="@+id/action_view_cos"
         android:title="Cos"
         app:showAsAction="always"/>
 
-<item
-    android:id="@+id/action_insert_dummy_data"
-    android:title="Insert dummy data"
-    app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_insert_dummy_data"
+        android:title="Insert dummy data"
+        app:showAsAction="never"/>
 
 
 </menu>

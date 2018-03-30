@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -110,8 +111,15 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI, getContentValues());
                 return true;
             case R.id.action_view_cos:
+                Log.e("tag", "entered action_view cos");
                 Intent intent = new Intent(CatalogActivity.this, CosActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.action_login:
+                Log.e("tag", "entered action_login");
+                Intent loginIntent = new Intent(CatalogActivity.this, LoginActivity.class);
+                startActivity(loginIntent);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

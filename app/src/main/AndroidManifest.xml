@@ -32,6 +32,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".CatalogActivity" />
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".CatalogActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CatalogActivity" />
+        </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:parentActivityName=".LoginActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".CatalogActivity" />
+        </activity>
         <provider
         android:authorities="com.example.cosmi.shopit"
         android:name=".data.DataProvider"

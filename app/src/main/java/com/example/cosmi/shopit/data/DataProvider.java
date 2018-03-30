@@ -28,6 +28,7 @@ public class DataProvider extends ContentProvider {
     private static final int ITEM_ID = 101;
     private static final int COS = 102;
     private static final int COS_ID = 103;
+    private static final int USER_ID = 104;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -42,6 +43,9 @@ public class DataProvider extends ContentProvider {
         sUriMatcher.addURI(CosContract.CONTENT_AUTHORITY, CosContract.PATH_COS, COS);
         //acces single row in cos table
         sUriMatcher.addURI(CosContract.CONTENT_AUTHORITY, CosContract.PATH_COS + "/#", COS_ID);
+
+        //acces single row in the user table
+        sUriMatcher.addURI(UserContract.CONTENT_AUTHORITY, UserContract.PATH_USER + "/#", USER_ID);
     }
 
 
@@ -92,6 +96,12 @@ public class DataProvider extends ContentProvider {
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
                 cursor = database.query(CosContract.CosEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case USER_ID:
+                //query one row in the user table
+                selection = UserContract.UserEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
+                cursor = database.query(UserContract.UserEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
             default:
                 throw new IllegalArgumentException("Cannot query unknown URI " + uri);
         }
@@ -113,10 +123,13 @@ public class DataProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case ITEMS:
-                //insert in item in the items table
+                //insert row in the items table
                 return insertItem(uri, contentValues);
             case COS:
-                //insert an item in the cos table
+                //insert row in the cos table
+                return insertItem(uri, contentValues);
+            case USER_ID:
+                //add a new user into the user table
                 return insertItem(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -126,6 +139,9 @@ public class DataProvider extends ContentProvider {
     //insert a new item into the database with the given content values and return the new content uri for that specific row
     private Uri insertItem(Uri uri, ContentValues values) {
         final int match = sUriMatcher.match(uri);
+
+        //create the id to be returned
+        long id;
 
         //initialize the database
         SQLiteDatabase database = itemDBHelper.getWritableDatabase();
@@ -151,13 +167,13 @@ public class DataProvider extends ContentProvider {
                 }
 
                 //insert a new item into the db with the given contentValues
-                long idCos = database.insert(CosContract.CosEntry.TABLE_NAME, null, values);
+                id = database.insert(CosContract.CosEntry.TABLE_NAME, null, values);
 
                 //notify all listeners of data changes
                 getContext().getContentResolver().notifyChange(uri,null);
 
                 //return the new uri with the id appened to it
-                return ContentUris.withAppendedId(uri, idCos);
+                return ContentUris.withAppendedId(uri, id);
 
 
 
@@ -181,12 +197,39 @@ public class DataProvider extends ContentProvider {
                 }
 
                 //insert a new item into the db with the given contentValues
-                long id = database.insert(ItemContract.ItemEntry.TABLE_NAME, null, values);
+                id = database.insert(ItemContract.ItemEntry.TABLE_NAME, null, values);
 
                 //notify all listeners of data changes
                 getContext().getContentResolver().notifyChange(uri,null);
 
-                //return the new uri with the id appened to it
+                //return the new uri with the id appended to it
+                return ContentUris.withAppendedId(uri, id);
+
+            case USER_ID:
+                //check if username is valid
+                String userName = values.getAsString(UserContract.UserEntry.COLUMN_USERNAME);
+                if (userName == null){
+                    throw new IllegalStateException("User must have valid name");
+                }
+
+                //check if password is valid
+                String password = values.getAsString(UserContract.UserEntry.COLUMN_PASSWORD);
+                if (password == null){
+                    throw new IllegalStateException("User must have valid password");
+                }
+
+                //check for adminity
+                int admin = values.getAsInteger(UserContract.UserEntry.COLUMN_ADMIN);
+                if (!UserContract.UserEntry.isValidUser(admin)){
+                    throw new IllegalStateException("User must be normal or admin: 0 or 1");
+                }
+                //insert a new user into the db with the given contentValues
+                id = database.insert(UserContract.UserEntry.TABLE_NAME, null, values);
+
+                //notify all listeners of data changes
+                getContext().getContentResolver().notifyChange(uri,null);
+
+                //return the new uri with the id appended to it
                 return ContentUris.withAppendedId(uri, id);
 
             default:
@@ -380,6 +423,7 @@ public class DataProvider extends ContentProvider {
     public String getType(@NonNull Uri uri) {
         final int match = sUriMatcher.match(uri);
         switch (match) {
+            case USER_ID: return UserContract.UserEntry.CONTENT_ITEM_TYPE;
             case COS: return CosContract.CosEntry.CONTENT_LIST_TYPE;
             case COS_ID: return CosContract.CosEntry.CONTENT_ITEM_TYPE;
             case ITEMS: return ItemContract.ItemEntry.CONTENT_LIST_TYPE;

@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.example.cosmi.shopit.data.ItemContract.ItemEntry;
 import com.example.cosmi.shopit.data.CosContract.CosEntry;
+import com.example.cosmi.shopit.data.UserContract.UserEntry;
 
 /**
  * Created by cosmi on 3/28/2018.
@@ -21,6 +22,13 @@ public class ItemDBHelper extends SQLiteOpenHelper {
     //table names
     private static final String TABLE_ITEMS = ItemEntry.TABLE_NAME;
     private static final String TABLE_COS = CosEntry.TABLE_NAME;
+    private static final String TABLE_USER = UserEntry.TABLE_NAME;
+
+    private static final String CREATE_TABLE_USER = "CREATE TABLE " + TABLE_ITEMS + " ("
+            + UserEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + UserEntry.COLUMN_USERNAME + " TEXT NOT NULL, "
+            + UserEntry.COLUMN_PASSWORD + " TEXT NOT NULL, "
+            + UserEntry.COLUMN_ADMIN + " INTEGER NOT NULL DEFAULT 0 )";
 
     private static final String CREATE_TABLE_ITEMS = "CREATE TABLE " + TABLE_ITEMS + " ("
             + ItemEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -48,6 +56,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         //create required tables
         sqLiteDatabase.execSQL(CREATE_TABLE_ITEMS);
         sqLiteDatabase.execSQL(CREATE_TABLE_COS);
+        sqLiteDatabase.execSQL(CREATE_TABLE_USER);
     }
 
     @Override
@@ -55,9 +64,11 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         //drop older tables on upgrade
         String DELETE_ITEMS_TABLE = "DROP TABLE IF EXISTS " + TABLE_ITEMS;
         String DELETE_COS_TABLE = "DROP TABLE IF EXISTS " + TABLE_COS;
+        String DELETE_USER_TABLE = "DROP TABLE IF EXISTS " + TABLE_USER;
 
         sqLiteDatabase.execSQL(DELETE_ITEMS_TABLE);
         sqLiteDatabase.execSQL(DELETE_COS_TABLE);
+        sqLiteDatabase.execSQL(DELETE_USER_TABLE);
 
         //create new tables
         onCreate(sqLiteDatabase);

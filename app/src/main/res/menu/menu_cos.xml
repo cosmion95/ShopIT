@@ -9,5 +9,10 @@
         android:title="Insert dummy data"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_empty_cos"
+        android:title="Empty cos"
+        app:showAsAction="never"/>
+
 
 </menu>

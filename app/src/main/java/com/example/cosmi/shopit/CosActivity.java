@@ -82,8 +82,13 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         switch (item.getItemId()) {
             case R.id.action_insert_cos_dummy_data:
                 getContentResolver().insert(CosContract.CosEntry.COS_CONTENT_URI, getContentValues());
-                return true;
+                break;
+            case R.id.action_empty_cos:
+                getContentResolver().delete(CosContract.CosEntry.COS_CONTENT_URI,null,null);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }
