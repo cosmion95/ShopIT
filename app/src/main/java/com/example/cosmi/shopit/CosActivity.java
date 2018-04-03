@@ -1,17 +1,22 @@
 package com.example.cosmi.shopit;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.example.cosmi.shopit.data.CosContract;
+import com.example.cosmi.shopit.data.UserContract;
 
 /**
  * Created by cosmi on 3/29/2018.
@@ -22,10 +27,21 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
     CosCursorAdapter cosCursorAdapter;
 
+    Uri currentUserUri;
+    private long userId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cos);
+
+        //retrieve the value of the userid
+        Intent intent = getIntent();
+        currentUserUri = intent.getData();
+        if (currentUserUri != null) {
+            userId = Long.valueOf(currentUserUri.getLastPathSegment());
+        }
+        Log.e("tag","current user id is: " + userId);
 
         //find the list view to display the items
         ListView listView = findViewById(R.id.cos_list_view);
@@ -45,7 +61,10 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
                 CosContract.CosEntry.COLUMN_PRICE,
                 CosContract.CosEntry.COLUMN_IMAGE
         };
-        return new CursorLoader(this, CosContract.CosEntry.COS_CONTENT_URI, projection, null, null, null);
+        String userID = String.valueOf(userId);
+        String selection = CosContract.CosEntry.COLUMN_USERID + " = ?";
+        String[] selectionArgs = new String[] { userID };
+        return new CursorLoader(this, CosContract.CosEntry.COS_CONTENT_URI, projection, selection, selectionArgs, null);
     }
 
     @Override
@@ -86,9 +105,20 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
             case R.id.action_empty_cos:
                 getContentResolver().delete(CosContract.CosEntry.COS_CONTENT_URI,null,null);
                 break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
+    //override the back button presses to send the user id back to the catalog activity
+    @Override
+    public void onBackPressed() {
+        Log.e("CDA", "onBackPressed Called");
+        Intent setIntent = new Intent(CosActivity.this, CatalogActivity.class);
+        Uri currentUserUri = ContentUris.withAppendedId(UserContract.UserEntry.USER_CONTENT_URI, userId);
+        setIntent.setData(currentUserUri);
+        startActivity(setIntent);
+    }
 }

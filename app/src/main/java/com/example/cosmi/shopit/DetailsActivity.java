@@ -1,6 +1,7 @@
 package com.example.cosmi.shopit;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.cosmi.shopit.data.CosContract;
 import com.example.cosmi.shopit.data.ItemContract;
+import com.example.cosmi.shopit.data.UserContract;
 
 
 /**
@@ -37,6 +40,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private Uri currentItemUri;
 
+    private long userId = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,15 +50,21 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         Intent intent = getIntent();
         currentItemUri = intent.getData();
 
-        //set up the floating action button
-        FloatingActionButton fab = findViewById(R.id.item_details_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                insertItem();
-            }
-        });
+        //get the current user id
+        userId = intent.getLongExtra("userId", -1);
+        Log.e("tag", "id received via intent is: " + userId);
 
+        //set up the floating action button
+        if (userId != -1) {
+            FloatingActionButton fab = findViewById(R.id.item_details_fab);
+            fab.setVisibility(View.VISIBLE);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    insertItem();
+                }
+            });
+        }
         //find all relevant views we want to use
         detailsNameView = findViewById(R.id.item_details_name);
         detailsCategoryView = findViewById(R.id.item_details_category);
@@ -117,7 +128,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         String itemName = detailsNameView.getText().toString().trim();
         String itemPrice = detailsPriceView.getText().toString().trim();
         String qty = String.valueOf(1);
-        String userID = String.valueOf(1);
+        String userID = String.valueOf(userId);
 
         ContentValues values = new ContentValues();
         values.put(CosContract.CosEntry.COLUMN_NAME, itemName);
@@ -140,6 +151,11 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_details, menu);
+        MenuItem item = menu.getItem(0);
+
+        if (userId == -1){
+            item.setTitle("Login");
+        }
         return true;
     }
 
@@ -147,9 +163,32 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
             case R.id.action_view_cos_details_activity:
-                Intent intent = new Intent(DetailsActivity.this, CosActivity.class);
-                startActivity(intent);
-        }
+                if (userId != -1) {
+                    Intent intent = new Intent(DetailsActivity.this, CosActivity.class);
+                    Uri currentUserUri = ContentUris.withAppendedId(UserContract.UserEntry.USER_CONTENT_URI, userId);
+                    intent.setData(currentUserUri);
+                    startActivity(intent);
+                }
+                else {
+                    Log.e("tag", "entered action_login");
+                    Intent loginIntent = new Intent(DetailsActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
+                }
+                break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+                }
         return super.onOptionsItemSelected(item);
+    }
+
+    //override the back button presses to send the user id back to the catalog activity
+    @Override
+    public void onBackPressed() {
+        Log.e("CDA", "onBackPressed Called");
+        Intent setIntent = new Intent(DetailsActivity.this, CatalogActivity.class);
+        Uri currentUserUri = ContentUris.withAppendedId(UserContract.UserEntry.USER_CONTENT_URI, userId);
+        setIntent.setData(currentUserUri);
+        startActivity(setIntent);
     }
 }

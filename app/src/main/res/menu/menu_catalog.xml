@@ -4,6 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".CatalogActivity">
 
+    <item
+        android:visible="false"
+        android:iconTint="@color/colorPrimaryDark"
+        android:id="@+id/action_admin"
+        android:title="ADMIN"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/action_login"
@@ -13,12 +19,14 @@
     <item
         android:id="@+id/action_view_cos"
         android:title="Cos"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:visible="false"/>
 
     <item
         android:id="@+id/action_insert_dummy_data"
         android:title="Insert dummy data"
         app:showAsAction="never"/>
+
 
 
 </menu>

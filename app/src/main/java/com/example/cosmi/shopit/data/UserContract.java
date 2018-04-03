@@ -25,14 +25,14 @@ public final class UserContract {
         public static final String TABLE_NAME = "user";
 
         public static final String _ID = BaseColumns._ID;
-        public static final String COLUMN_USERNAME = "userid";
-        public static final String COLUMN_PASSWORD = "name";
-        public static final String COLUMN_ADMIN = "price";
+        public static final String COLUMN_USERNAME = "username";
+        public static final String COLUMN_PASSWORD = "password";
+        public static final String COLUMN_ADMIN = "admin";
 
         public static final int NORMAL_USER = 0;
         public static final int ADMIN_USER = 1;
 
-        public static final Uri COS_CONTENT_URI = Uri.withAppendedPath(USER_BASE_CONTENT_URI, PATH_USER);
+        public static final Uri USER_CONTENT_URI = Uri.withAppendedPath(USER_BASE_CONTENT_URI, PATH_USER);
 
         public static boolean isValidUser(int user){
             if (user == NORMAL_USER || user == ADMIN_USER) {

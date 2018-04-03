@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
+import android.util.Log;
 
 
 public class DataProvider extends ContentProvider {
@@ -29,6 +29,7 @@ public class DataProvider extends ContentProvider {
     private static final int COS = 102;
     private static final int COS_ID = 103;
     private static final int USER_ID = 104;
+    private static final int USERS = 105;
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -45,6 +46,7 @@ public class DataProvider extends ContentProvider {
         sUriMatcher.addURI(CosContract.CONTENT_AUTHORITY, CosContract.PATH_COS + "/#", COS_ID);
 
         //acces single row in the user table
+        sUriMatcher.addURI(UserContract.CONTENT_AUTHORITY, UserContract.PATH_USER, USERS);
         sUriMatcher.addURI(UserContract.CONTENT_AUTHORITY, UserContract.PATH_USER + "/#", USER_ID);
     }
 
@@ -86,20 +88,28 @@ public class DataProvider extends ContentProvider {
                 cursor = database.query(ItemContract.ItemEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case COS:
+                Log.e("Tag","Entered query method for COS");
                 //query the cos table
                 cursor = database.query(CosContract.CosEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case COS_ID:
                 //query one row in the cos
                 //extract id from uri and perform an sql query on that specific id
+                Log.e("Tag","Entered query method for COS_ID");
                 selection = CosContract.CosEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
                 cursor = database.query(CosContract.CosEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             case USER_ID:
                 //query one row in the user table
+                Log.e("tag","entered case user id");
                 selection = UserContract.UserEntry._ID + "=?";
                 selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
+                cursor = database.query(UserContract.UserEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case USERS:
+                //query the users table
+                Log.e("tag","entered case users");
                 cursor = database.query(UserContract.UserEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
             default:
@@ -130,6 +140,8 @@ public class DataProvider extends ContentProvider {
                 return insertItem(uri, contentValues);
             case USER_ID:
                 //add a new user into the user table
+                return insertItem(uri, contentValues);
+            case USERS:
                 return insertItem(uri, contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
@@ -205,7 +217,7 @@ public class DataProvider extends ContentProvider {
                 //return the new uri with the id appended to it
                 return ContentUris.withAppendedId(uri, id);
 
-            case USER_ID:
+            case USERS:
                 //check if username is valid
                 String userName = values.getAsString(UserContract.UserEntry.COLUMN_USERNAME);
                 if (userName == null){
@@ -431,5 +443,7 @@ public class DataProvider extends ContentProvider {
             default: throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
     }
+
+
 
 }
