@@ -40,6 +40,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private Uri currentItemUri;
 
+    int imageResourceId;
+
     private long userId = -1;
 
     @Override
@@ -71,6 +73,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         detailsDescriptionView = findViewById(R.id.item_details_description);
         detailsPriceView = findViewById(R.id.item_details_price);
         detailsStockView = findViewById(R.id.item_details_stock);
+        detailsImageView = findViewById(R.id.item_details_image);
 
         getLoaderManager().initLoader(0, null, this);
     }
@@ -83,7 +86,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                 ItemContract.ItemEntry.COLUMN_STOCK,
                 ItemContract.ItemEntry.COLUMN_PRICE,
                 ItemContract.ItemEntry.COLUMN_CATEGORY,
-                ItemContract.ItemEntry.COLUMN_DESCRIPTION
+                ItemContract.ItemEntry.COLUMN_DESCRIPTION,
+                ItemContract.ItemEntry.COLUMN_IMAGE
         };
         return new CursorLoader(this, currentItemUri, projection, null, null, null);
     }
@@ -100,10 +104,12 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         int pricePosition = data.getColumnIndex(ItemContract.ItemEntry.COLUMN_PRICE);
         int stockPosition = data.getColumnIndex(ItemContract.ItemEntry.COLUMN_STOCK);
         int descriptionPosition = data.getColumnIndex(ItemContract.ItemEntry.COLUMN_DESCRIPTION);
+        int imagePosition = data.getColumnIndex(ItemContract.ItemEntry.COLUMN_IMAGE);
 
         int category = data.getInt(categoryPosition);
         int price = data.getInt(pricePosition);
         int stock = data.getInt(stockPosition);
+        imageResourceId = data.getInt(imagePosition);
 
         String nameToDisplay = data.getString(namePosition);
         String categoryToDisplay = String.valueOf(category);
@@ -116,6 +122,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         detailsPriceView.setText(priceToDisplay);
         detailsCategoryView.setText(categoryToDisplay);
         detailsDescriptionView.setText(descriptionToDisplay);
+        detailsImageView.setImageResource(imageResourceId);
 
     }
 
@@ -130,11 +137,13 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         String qty = String.valueOf(1);
         String userID = String.valueOf(userId);
 
+
         ContentValues values = new ContentValues();
         values.put(CosContract.CosEntry.COLUMN_NAME, itemName);
         values.put(CosContract.CosEntry.COLUMN_PRICE, itemPrice);
         values.put(CosContract.CosEntry.COLUMN_QTY, qty);
         values.put(CosContract.CosEntry.COLUMN_USERID, userID);
+        values.put(CosContract.CosEntry.COLUMN_IMAGE, imageResourceId);
 
         Uri resultUri = getContentResolver().insert(CosContract.CosEntry.COS_CONTENT_URI, values);
 

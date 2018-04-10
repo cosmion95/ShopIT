@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class ItemCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
 
         //find all the list views
-        //ImageView imageView = (ImageView) view.findViewById(R.id.list_item_image);
+        ImageView imageView = (ImageView) view.findViewById(R.id.list_item_image);
         TextView nameTextView = (TextView) view.findViewById(R.id.list_item_name);
         TextView categoryTextView = (TextView) view.findViewById(R.id.list_item_category);
         TextView priceTextView = (TextView) view.findViewById(R.id.list_prod_price);
@@ -48,11 +49,13 @@ public class ItemCursorAdapter extends CursorAdapter {
         int categoryPosition = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_CATEGORY);
         int pricePosition = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_PRICE);
         int stockPosition = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_STOCK);
+        int imagePosition = cursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_IMAGE);
 
         String name = cursor.getString(namePosition);
         Integer category = cursor.getInt(categoryPosition);
         Integer price = cursor.getInt(pricePosition);
         Integer stock = cursor.getInt(stockPosition);
+        Integer imageResourceId = cursor.getInt(imagePosition);
 
         String priceToString = String.valueOf(price);
         String categoryToString = String.valueOf(category);
@@ -62,6 +65,8 @@ public class ItemCursorAdapter extends CursorAdapter {
         categoryTextView.setText(categoryToString);
         priceTextView.setText(priceToString);
         stockTextView.setText(stockToString);
+        imageView.setImageResource(imageResourceId);
+
 
     }
 

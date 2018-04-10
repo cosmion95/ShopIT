@@ -15,7 +15,7 @@
             android:id="@+id/cos_item_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:background="@color/colorPrimary" />
+            tools:src="@drawable/laptop_lenovo_3"/>
 
         <TextView
             android:id="@+id/cos_item_name"

@@ -13,7 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.cosmi.shopit.data.CosContract;
 import com.example.cosmi.shopit.data.UserContract;
@@ -30,10 +34,14 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
     Uri currentUserUri;
     private long userId = -1;
 
+    ListView listView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cos);
+
 
         //retrieve the value of the userid
         Intent intent = getIntent();
@@ -43,11 +51,21 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         }
         Log.e("tag","current user id is: " + userId);
 
-        //find the list view to display the items
-        ListView listView = findViewById(R.id.cos_list_view);
 
+
+
+        //find the list view to display the items
+        listView = findViewById(R.id.cos_list_view);
         cosCursorAdapter = new CosCursorAdapter(this, null);
         listView.setAdapter(cosCursorAdapter);
+
+        cosCursorAdapter.notifyDataSetChanged();
+        listView.setAdapter(cosCursorAdapter);
+
+
+
+
+
 
         getLoaderManager().initLoader(0, null, this);
     }
@@ -96,6 +114,7 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         return values;
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()) {
@@ -121,4 +140,5 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         setIntent.setData(currentUserUri);
         startActivity(setIntent);
     }
+
 }

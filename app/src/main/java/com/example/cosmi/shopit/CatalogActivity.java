@@ -137,6 +137,7 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         values.put(ItemContract.ItemEntry.COLUMN_CATEGORY, ItemContract.ItemEntry.CATEOGRY_LAPTOPS);
         values.put(ItemContract.ItemEntry.COLUMN_PRICE, 2999);
         values.put(ItemContract.ItemEntry.COLUMN_STOCK, 20);
+        values.put(ItemContract.ItemEntry.COLUMN_IMAGE, R.drawable.laptop_lenovo_3);
         values.put(ItemContract.ItemEntry.COLUMN_DESCRIPTION, "Starting at a mere 3.17 lbs and just .79” thin, this laptop is ultraportable – it’s perfect for productivity on the go. And with up to nine hours of battery life, you can work a full day without recharging. Intel® 6th Gen Core™ i processors with built-in security deliver great mobile performance. The optional 16GB high-performance DDR4 memory yields a higher data transfer rate than previous generations, less power consumption, and a cooler running machine.");
 
         return values;

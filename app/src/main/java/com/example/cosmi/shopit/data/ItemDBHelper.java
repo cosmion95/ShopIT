@@ -40,7 +40,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
             + ItemEntry.COLUMN_NAME + " TEXT NOT NULL, "
             + ItemEntry.COLUMN_CATEGORY + " INTEGER NOT NULL, "
             + ItemEntry.COLUMN_DESCRIPTION + " TEXT, "
-            + ItemEntry.COLUMN_IMAGE + " TEXT, "
+            + ItemEntry.COLUMN_IMAGE + " INTEGER, "
             + ItemEntry.COLUMN_PRICE + " INTEGER NOT NULL, "
             + ItemEntry.COLUMN_STOCK + " INTEGER NOT NULL DEFAULT 0 )";
 
@@ -49,8 +49,8 @@ public class ItemDBHelper extends SQLiteOpenHelper {
             + CosEntry.COLUMN_USERID + " INTEGER NOT NULL, "
             + CosEntry.COLUMN_NAME + " TEXT NOT NULL, "
             + CosEntry.COLUMN_PRICE + " INTEGER NOT NULL, "
-            + CosEntry.COLUMN_QTY + " INTEGER NOT NULL, "
-            + CosEntry.COLUMN_IMAGE + " TEXT, "
+            + CosEntry.COLUMN_QTY + " INTEGER NOT NULL DEFAULT 1, "
+            + CosEntry.COLUMN_IMAGE + " INTEGER, "
             + "FOREIGN KEY (" + CosEntry.COLUMN_USERID + ") REFERENCES " + TABLE_USER + "(" + UserEntry._ID + "))";
 
     public ItemDBHelper(Context context){
@@ -129,4 +129,31 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         }
         return isAdmin;
     }
+
+    public int updateQty(int increasedQty, Long id) {
+        //convert to string the value of the current item id
+        String itemID = String.valueOf(id);
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(CosEntry.COLUMN_QTY, increasedQty);
+        String whereClause = CosEntry._ID + " = ?";
+        String[] whereArgs = new String[] { itemID };
+
+        int rowsAffected = sqLiteDatabase.update(CosEntry.TABLE_NAME, values, whereClause, whereArgs);
+        return rowsAffected;
+    }
+
+    public int deleteItemFromCos(Long id){
+        String itemID = String.valueOf(id);
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String whereClause = CosEntry._ID + " = ?";
+        String[] whereArgs = new String[] { itemID };
+
+        int rowsAffected = sqLiteDatabase.delete(CosEntry.TABLE_NAME, whereClause, whereArgs);
+        return rowsAffected;
+
+    }
+
 }
