@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,12 +13,14 @@
         android:padding="10dp">
 
         <ImageView
+            android:focusable="false"
             android:id="@+id/cos_item_image"
             android:layout_width="150dp"
             android:layout_height="150dp"
             tools:src="@drawable/laptop_lenovo_3"/>
 
         <TextView
+            android:focusable="false"
             android:id="@+id/cos_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,6 +31,7 @@
             android:textSize="20sp"/>
 
         <TextView
+            android:focusable="false"
             android:id="@+id/cos_item_qty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +42,7 @@
             tools:text="Cantitate: 5" />
 
         <Button
+            android:focusable="false"
             android:id="@+id/cos_item_decrease_qty"
             style="@android:style/Widget.DeviceDefault.Light.Button.Small"
             android:layout_width="wrap_content"
@@ -47,6 +52,7 @@
             android:layout_below="@id/cos_item_name"/>
 
         <Button
+
             android:id="@+id/cos_item_increase_qty"
             style="@android:style/Widget.DeviceDefault.Light.Button.Small"
             android:layout_width="wrap_content"
@@ -56,6 +62,7 @@
             android:layout_below="@id/cos_item_name"/>
 
         <TextView
+            android:focusable="false"
             android:id="@+id/cos_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,6 +72,7 @@
             android:padding="5dp"/>
 
         <Button
+            android:focusable="false"
             android:id="@+id/cos_item_remove_from_cos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

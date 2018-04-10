@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,11 +31,13 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
 
     CosCursorAdapter cosCursorAdapter;
+    Cursor cursor;
 
     Uri currentUserUri;
     private long userId = -1;
 
     ListView listView;
+
 
 
     @Override
@@ -53,18 +56,10 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
 
 
-
         //find the list view to display the items
         listView = findViewById(R.id.cos_list_view);
         cosCursorAdapter = new CosCursorAdapter(this, null);
         listView.setAdapter(cosCursorAdapter);
-
-        cosCursorAdapter.notifyDataSetChanged();
-        listView.setAdapter(cosCursorAdapter);
-
-
-
-
 
 
         getLoaderManager().initLoader(0, null, this);

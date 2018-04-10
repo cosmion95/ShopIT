@@ -27,6 +27,10 @@
         android:title="Insert dummy data"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_insert_dummy_data2"
+        android:title="Insert dummy data"
+        app:showAsAction="never"/>
 
 
 </menu>

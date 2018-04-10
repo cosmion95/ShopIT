@@ -15,14 +15,13 @@ import android.widget.Toast;
 import com.example.cosmi.shopit.data.CosContract;
 import com.example.cosmi.shopit.data.ItemDBHelper;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by cosmi on 3/28/2018.
  */
 
 public class CosCursorAdapter extends CursorAdapter {
-
-    Long itemID;
-    int qty;
 
     //construct a new ItemCursorAdapter
     public CosCursorAdapter(Context context, Cursor c){
@@ -50,43 +49,41 @@ public class CosCursorAdapter extends CursorAdapter {
         TextView priceTextView =  view.findViewById(R.id.cos_item_price);
 
         //find all the item information from the db using the cursor
-        int namePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_NAME);
-        int qtyPosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_QTY);
-        int pricePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_PRICE);
-        int imagePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_IMAGE);
         int idPosition = cursor.getColumnIndex(CosContract.CosEntry._ID);
+        int namePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_NAME);
+        int pricePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_PRICE);
+        int qtyPosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_QTY);
+        int imagePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_IMAGE);
 
         final String name = cursor.getString(namePosition);
-        qty = cursor.getInt(qtyPosition);
+        final int qty = cursor.getInt(qtyPosition);
         Integer price = cursor.getInt(pricePosition);
         final Integer imageResourceId = cursor.getInt(imagePosition);
-        itemID = cursor.getLong(idPosition);
+        final Long id = cursor.getLong(idPosition);
+        Log.e("tag","actual qty is: " + qty);
 
-        String priceToString = String.valueOf(price);
-        String qtyToString = String.valueOf(qty);
-
-        nameTextView.setText(name);
-        qtyTextView.setText(qtyToString);
-        priceTextView.setText(priceToString);
-        imageView.setImageResource(imageResourceId);
 
         Button increaseQty = view.findViewById(R.id.cos_item_increase_qty);
         increaseQty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //get an instance of a db helper
-                ItemDBHelper itemDBHelper = new ItemDBHelper(context);
-                //increase quantity by 1
-                qty += 1;
-                //increase the qty in the database
-                int rowsAffected = itemDBHelper.updateQty(qty, itemID);
-                notifyDataSetChanged();
-
+               // get an instance of a db helper
+                 ItemDBHelper itemDBHelper = new ItemDBHelper(context);
+                 int qtyToIncrease = qty;
+               // increase quantity by 1
+                Log.e("tag","qty before increase: " + qtyToIncrease);
+                 qtyToIncrease++;
+                Log.e("tag","qty after increase: " + qtyToIncrease);
+               // increase the qty in the database
+                 int rowsAffected = itemDBHelper.updateQty(qtyToIncrease, id);
+                 //qtyToIncrease = 0;
+                //Log.e("tag","button pressed, current item id is: " + id);
                 if (rowsAffected != 0){
-                    Toast.makeText(context, "Qty in DB increased succesfully",Toast.LENGTH_SHORT).show();
+                   Toast.makeText(context, "Qty in DB increased succesfully",Toast.LENGTH_SHORT).show();
+
                 }
                 else {
-                    Toast.makeText(context, "Could not increase qty in DB",Toast.LENGTH_SHORT).show();
+                   Toast.makeText(context, "Could not increase qty in DB",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -95,33 +92,38 @@ public class CosCursorAdapter extends CursorAdapter {
         decreaseQty.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //get an instance of a db helper
-                ItemDBHelper itemDBHelper = new ItemDBHelper(context);
-                //check to see if quantity can actually be lowered
+                // get an instance of a db helper
                 if (qty > 1) {
-                    qty -= 1;
-                    //increase the qty in the database
-                    int rowsAffected = itemDBHelper.updateQty(qty, itemID);
-                    notifyDataSetChanged();
-
+                    ItemDBHelper itemDBHelper = new ItemDBHelper(context);
+                    int qtyToIncrease = qty;
+                    // increase quantity by 1
+                    Log.e("tag", "qty before decrease: " + qtyToIncrease);
+                    qtyToIncrease--;
+                    Log.e("tag", "qty after decrease: " + qtyToIncrease);
+                    // increase the qty in the database
+                    int rowsAffected = itemDBHelper.updateQty(qtyToIncrease, id);
+                    //qtyToIncrease = 0;
+                    //Log.e("tag","button pressed, current item id is: " + id);
                     if (rowsAffected != 0) {
                         Toast.makeText(context, "Qty in DB decreased succesfully", Toast.LENGTH_SHORT).show();
+
                     } else {
                         Toast.makeText(context, "Could not decrease qty in DB", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
-                    Toast.makeText(context, "Qty cannot be smaller than 1", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Qty must be at least 1", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
 
         Button deleteItem = view.findViewById(R.id.cos_item_remove_from_cos);
         deleteItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ItemDBHelper itemDBHelper = new ItemDBHelper(context);
-                int rowsAffected = itemDBHelper.deleteItemFromCos(itemID);
+                int rowsAffected = itemDBHelper.deleteItemFromCos(id);
 
                 if (rowsAffected != 0) {
                     Toast.makeText(context, "Item deleted from cos", Toast.LENGTH_SHORT).show();
@@ -131,7 +133,15 @@ public class CosCursorAdapter extends CursorAdapter {
             }
         });
 
-    }
 
+        String priceToString = String.valueOf(price);
+        String qtyToString = String.valueOf(qty);
+
+        nameTextView.setText(name);
+        qtyTextView.setText(qtyToString);
+        priceTextView.setText(priceToString);
+        imageView.setImageResource(imageResourceId);
+
+    }
 
 }
