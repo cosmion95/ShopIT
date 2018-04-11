@@ -130,42 +130,10 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
         return true;
     }
 
-    private ContentValues getContentValues() {
-
-        ContentValues values = new ContentValues();
-        values.put(ItemContract.ItemEntry.COLUMN_NAME, "Lenovo Thinkpad 13");
-        values.put(ItemContract.ItemEntry.COLUMN_CATEGORY, ItemContract.ItemEntry.CATEOGRY_LAPTOPS);
-        values.put(ItemContract.ItemEntry.COLUMN_PRICE, 2999);
-        values.put(ItemContract.ItemEntry.COLUMN_STOCK, 20);
-        values.put(ItemContract.ItemEntry.COLUMN_IMAGE, R.drawable.laptop_lenovo_3);
-        values.put(ItemContract.ItemEntry.COLUMN_DESCRIPTION, "Starting at a mere 3.17 lbs and just .79” thin, this laptop is ultraportable – it’s perfect for productivity on the go. And with up to nine hours of battery life, you can work a full day without recharging. Intel® 6th Gen Core™ i processors with built-in security deliver great mobile performance. The optional 16GB high-performance DDR4 memory yields a higher data transfer rate than previous generations, less power consumption, and a cooler running machine.");
-
-        return values;
-    }
-
-    private ContentValues getContentValues2() {
-
-        ContentValues values = new ContentValues();
-        values.put(ItemContract.ItemEntry.COLUMN_NAME, "Macbook Pro 2016");
-        values.put(ItemContract.ItemEntry.COLUMN_CATEGORY, ItemContract.ItemEntry.CATEOGRY_LAPTOPS);
-        values.put(ItemContract.ItemEntry.COLUMN_PRICE, 5999);
-        values.put(ItemContract.ItemEntry.COLUMN_STOCK, 10);
-        values.put(ItemContract.ItemEntry.COLUMN_IMAGE, R.drawable.macbook_2016);
-        values.put(ItemContract.ItemEntry.COLUMN_DESCRIPTION, "It’s razor thin, feather light, and even faster and more powerful than before. It has the brightest, most colorful Mac notebook display ever. And it features the Touch Bar — a Multi-Touch enabled strip of glass built into the keyboard for instant access to the tools you want, right when you want them. MacBook Pro is built on groundbreaking ideas. And it’s ready for yours.");
-
-        return values;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 
         switch (item.getItemId()) {
-            case R.id.action_insert_dummy_data:
-                getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI, getContentValues());
-                return true;
-            case R.id.action_insert_dummy_data2:
-                getContentResolver().insert(ItemContract.ItemEntry.CONTENT_URI, getContentValues2());
-                return true;
             case R.id.action_view_cos:
                 Log.e("tag", "entered action_view cos");
                 Intent intent = new Intent(CatalogActivity.this, CosActivity.class);
@@ -185,6 +153,11 @@ public class CatalogActivity extends AppCompatActivity implements LoaderManager.
                 break;
                 case R.id.action_admin:
                     //TODO enter admin insert activity if user is admin
+                    Intent intent2 = new Intent(CatalogActivity.this, AdminActivity.class);
+                    Uri currentUserUri2 = ContentUris.withAppendedId(UserContract.UserEntry.USER_CONTENT_URI, userId);
+                    intent2.setData(currentUserUri2);
+                    startActivity(intent2);
+                    break;
 
         }
         return super.onOptionsItemSelected(item);

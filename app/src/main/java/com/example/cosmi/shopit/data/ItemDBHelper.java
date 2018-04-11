@@ -88,6 +88,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         values.put(UserContract.UserEntry.COLUMN_ADMIN, admin);
 
         long id = sqLiteDatabase.insert(UserEntry.TABLE_NAME, null, values);
+        sqLiteDatabase.close();
         return id;
     }
 
@@ -99,7 +100,6 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         long id = -1;
 
         Cursor cursor = sqLiteDatabase.query(UserContract.UserEntry.TABLE_NAME, tableColumns, whereClause, whereArgs, null, null, null);
-
 
         //return the correct id of the user or else return -1
         if (cursor != null && cursor.moveToFirst()) {
@@ -122,7 +122,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         int isAdmin = 0;
 
         Cursor cursor = sqLiteDatabase.query(UserContract.UserEntry.TABLE_NAME, tableColumns, whereClause, whereArgs, null, null, null);
-
+        //sqLiteDatabase.close();
         if (cursor != null && cursor.moveToFirst()) {
             int adminIndex = cursor.getColumnIndex(UserEntry.COLUMN_ADMIN);
             isAdmin = cursor.getInt(adminIndex);
@@ -141,6 +141,7 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         String[] whereArgs = new String[] { itemID };
 
         int rowsAffected = sqLiteDatabase.update(CosEntry.TABLE_NAME, values, whereClause, whereArgs);
+
         return rowsAffected;
     }
 
@@ -152,7 +153,9 @@ public class ItemDBHelper extends SQLiteOpenHelper {
         String[] whereArgs = new String[] { itemID };
 
         int rowsAffected = sqLiteDatabase.delete(CosEntry.TABLE_NAME, whereClause, whereArgs);
+
         return rowsAffected;
+
 
     }
 

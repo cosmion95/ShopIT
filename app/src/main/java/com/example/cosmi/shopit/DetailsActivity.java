@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.cosmi.shopit.data.CosContract;
 import com.example.cosmi.shopit.data.ItemContract;
+import com.example.cosmi.shopit.data.ItemDBHelper;
 import com.example.cosmi.shopit.data.UserContract;
 
 
@@ -43,6 +44,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     int imageResourceId;
 
     private long userId = -1;
+    int isAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,8 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         //get the current user id
         userId = intent.getLongExtra("userId", -1);
         Log.e("tag", "id received via intent is: " + userId);
+
+        isAdmin = new ItemDBHelper(this).isAdmin(userId);
 
         //set up the floating action button
         if (userId != -1) {
@@ -161,6 +165,11 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_details, menu);
         MenuItem item = menu.getItem(0);
+        MenuItem adminItem = menu.getItem(1);
+
+        if (isAdmin == 1) {
+            adminItem.setVisible(true);
+        }
 
         if (userId == -1){
             item.setTitle("Login");
@@ -184,6 +193,9 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
                     startActivity(loginIntent);
                 }
                 break;
+            case R.id.action_remove_item:
+                removeItem();
+                break;
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -199,5 +211,21 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         Uri currentUserUri = ContentUris.withAppendedId(UserContract.UserEntry.USER_CONTENT_URI, userId);
         setIntent.setData(currentUserUri);
         startActivity(setIntent);
+    }
+
+    private void removeItem(){
+        String whereClause = ItemContract.ItemEntry.COLUMN_NAME + " = ?";
+        String itemName = detailsNameView.getText().toString().trim();
+        String[] whereArgs = new String[] { itemName };
+        int rowsAffected = getContentResolver().delete(ItemContract.ItemEntry.CONTENT_URI, whereClause, whereArgs);
+        if (rowsAffected == 0){
+            Toast.makeText(this, "Item was NOT removed", Toast.LENGTH_SHORT);
+        }
+        else {
+            Intent intent = new Intent(DetailsActivity.this, CatalogActivity.class);
+            Uri currentUserUri = ContentUris.withAppendedId(UserContract.UserEntry.USER_CONTENT_URI, userId);
+            intent.setData(currentUserUri);
+            startActivity(intent);
+        }
     }
 }

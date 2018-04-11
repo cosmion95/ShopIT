@@ -9,5 +9,11 @@
         android:title="Cos"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/action_remove_item"
+        android:title="Remove item"
+        app:showAsAction="always"
+        android:visible="false"/>
+
 
 </menu>

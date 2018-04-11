@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.example.cosmi.shopit.data.CosContract;
 import com.example.cosmi.shopit.data.ItemDBHelper;
 
+import java.util.ArrayList;
+
 import static android.content.ContentValues.TAG;
 
 /**
@@ -22,6 +24,9 @@ import static android.content.ContentValues.TAG;
  */
 
 public class CosCursorAdapter extends CursorAdapter {
+
+    private int totalPrice = 0;
+    ArrayList idList = new ArrayList<>();
 
     //construct a new ItemCursorAdapter
     public CosCursorAdapter(Context context, Cursor c){
@@ -42,6 +47,8 @@ public class CosCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
 
+        final CosCursorAdapter cosCursorAdapter = this;
+
         //find all the list views
         ImageView imageView = view.findViewById(R.id.cos_item_image);
         TextView nameTextView = view.findViewById(R.id.cos_item_name);
@@ -60,8 +67,20 @@ public class CosCursorAdapter extends CursorAdapter {
         Integer price = cursor.getInt(pricePosition);
         final Integer imageResourceId = cursor.getInt(imagePosition);
         final Long id = cursor.getLong(idPosition);
-        Log.e("tag","actual qty is: " + qty);
+      //  Log.e("tag","actual qty is: " + qty);
 
+
+        //calculating the total price
+        int idToAdd = cursor.getInt(idPosition);
+       // Log.e("tag","current id is:" + idToAdd);
+        while (!idList.contains(idToAdd)){
+            Log.e("tag","id was not in idList");
+            idList.add(idToAdd);
+            Log.e("tag","current list is: " + idList);
+            int priceWithQty = price * qty;
+            totalPrice += priceWithQty;
+          //  Log.e("tag", "total price currently is: " + totalPrice);
+        }
 
         Button increaseQty = view.findViewById(R.id.cos_item_increase_qty);
         increaseQty.setOnClickListener(new View.OnClickListener() {
@@ -69,17 +88,20 @@ public class CosCursorAdapter extends CursorAdapter {
             public void onClick(View v) {
                // get an instance of a db helper
                  ItemDBHelper itemDBHelper = new ItemDBHelper(context);
+                 //get the quantity that we want to increase
                  int qtyToIncrease = qty;
                // increase quantity by 1
-                Log.e("tag","qty before increase: " + qtyToIncrease);
+             //   Log.e("tag","qty before increase: " + qtyToIncrease);
                  qtyToIncrease++;
-                Log.e("tag","qty after increase: " + qtyToIncrease);
+             //   Log.e("tag","qty after increase: " + qtyToIncrease);
                // increase the qty in the database
                  int rowsAffected = itemDBHelper.updateQty(qtyToIncrease, id);
                  //qtyToIncrease = 0;
                 //Log.e("tag","button pressed, current item id is: " + id);
                 if (rowsAffected != 0){
                    Toast.makeText(context, "Qty in DB increased succesfully",Toast.LENGTH_SHORT).show();
+                   changeCursor(cursor);
+                   notifyDataSetChanged();
 
                 }
                 else {
@@ -95,13 +117,14 @@ public class CosCursorAdapter extends CursorAdapter {
                 // get an instance of a db helper
                 if (qty > 1) {
                     ItemDBHelper itemDBHelper = new ItemDBHelper(context);
-                    int qtyToIncrease = qty;
+                    //get the quantity that we want to decrease
+                    int qtyToDecrease = qty;
                     // increase quantity by 1
-                    Log.e("tag", "qty before decrease: " + qtyToIncrease);
-                    qtyToIncrease--;
-                    Log.e("tag", "qty after decrease: " + qtyToIncrease);
+                //    Log.e("tag", "qty before decrease: " + qtyToDecrease);
+                    qtyToDecrease--;
+                 //   Log.e("tag", "qty after decrease: " + qtyToDecrease);
                     // increase the qty in the database
-                    int rowsAffected = itemDBHelper.updateQty(qtyToIncrease, id);
+                    int rowsAffected = itemDBHelper.updateQty(qtyToDecrease, id);
                     //qtyToIncrease = 0;
                     //Log.e("tag","button pressed, current item id is: " + id);
                     if (rowsAffected != 0) {
@@ -134,14 +157,18 @@ public class CosCursorAdapter extends CursorAdapter {
         });
 
 
-        String priceToString = String.valueOf(price);
-        String qtyToString = String.valueOf(qty);
+        String priceToString = "Pret: " + price + " RON";
+        String qtyToString = "Cantitate: " + qty;
 
         nameTextView.setText(name);
         qtyTextView.setText(qtyToString);
         priceTextView.setText(priceToString);
         imageView.setImageResource(imageResourceId);
 
+    }
+
+    public int getTotalPrice(){
+        return totalPrice;
     }
 
 }

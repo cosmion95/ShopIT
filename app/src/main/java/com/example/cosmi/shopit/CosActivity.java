@@ -31,10 +31,10 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
 
     CosCursorAdapter cosCursorAdapter;
-    Cursor cursor;
 
     Uri currentUserUri;
     private long userId = -1;
+    private int itemsPrice = 0;
 
     ListView listView;
 
@@ -61,6 +61,28 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         cosCursorAdapter = new CosCursorAdapter(this, null);
         listView.setAdapter(cosCursorAdapter);
 
+        //get the prices views
+        TextView itemPriceTextView = findViewById(R.id.cos_item_cost);
+        TextView deliveryPriceTextView = findViewById(R.id.cos_delivery_cost);
+        TextView totalPriceTextView = findViewById(R.id.cos_total_price);
+
+
+        //get the total price
+        itemsPrice = getTotalPrice();
+        Log.e("tag", "total price is: " + itemsPrice);
+        String itemPriceString = "Pret produse: " + itemsPrice + " RON";
+        int totalPrice = itemsPrice + 25;
+        String totalPriceString = "Pret total: " + totalPrice + " RON";
+
+
+        itemPriceTextView.setText(itemPriceString);
+        deliveryPriceTextView.setText("Cost livrare: 25 RON");
+        totalPriceTextView.setText(totalPriceString);
+
+
+
+
+
 
         getLoaderManager().initLoader(0, null, this);
     }
@@ -77,6 +99,7 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         String userID = String.valueOf(userId);
         String selection = CosContract.CosEntry.COLUMN_USERID + " = ?";
         String[] selectionArgs = new String[] { userID };
+
         return new CursorLoader(this, CosContract.CosEntry.COS_CONTENT_URI, projection, selection, selectionArgs, null);
     }
 
@@ -134,6 +157,21 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         Uri currentUserUri = ContentUris.withAppendedId(UserContract.UserEntry.USER_CONTENT_URI, userId);
         setIntent.setData(currentUserUri);
         startActivity(setIntent);
+    }
+
+    //get the sum of all items in cos  (price * qty)
+    private int getTotalPrice(){
+        String sumForProjection = "SUM(" + CosContract.CosEntry.COLUMN_PRICE + " * " + CosContract.CosEntry.COLUMN_QTY + ")";
+        String[] projection = {
+                sumForProjection
+        };
+        String stringUserID = String.valueOf(userId);
+        String whereClause = CosContract.CosEntry.COLUMN_USERID + " = ?";
+        String[] whereArgs = new String[] { stringUserID };
+        Cursor totalPriceCursor = getContentResolver().query(CosContract.CosEntry.COS_CONTENT_URI, projection, whereClause, whereArgs, null);
+        totalPriceCursor.moveToFirst();
+        int totalPrice = totalPriceCursor.getInt(0);
+        return totalPrice;
     }
 
 }

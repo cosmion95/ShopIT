@@ -57,12 +57,44 @@ public class ItemCursorAdapter extends CursorAdapter {
         Integer stock = cursor.getInt(stockPosition);
         Integer imageResourceId = cursor.getInt(imagePosition);
 
-        String priceToString = String.valueOf(price);
-        String categoryToString = String.valueOf(category);
-        String stockToString = String.valueOf(stock);
+        String categoryToDisplay = "";
+        switch (category){
+            case 0:
+                categoryToDisplay = "Laptops";
+                break;
+            case 1:
+                categoryToDisplay = "Desktops";
+                break;
+            case 2:
+                categoryToDisplay = "Mice";
+                break;
+            case 3:
+                categoryToDisplay = "Keyboards";
+                break;
+            case 4:
+                categoryToDisplay = "Headphones";
+                break;
+            case 5:
+                categoryToDisplay = "Monitors";
+                break;
+        }
+
+        String priceToString = "Pret: " + price + " RON";
+
+        String stockToString = "";
+
+        if (stock > 10) {
+            stockToString = "In stoc magazin";
+        }
+        else if (stock == 0) {
+            stockToString = "Nu este in stoc";
+        }
+        else {
+            stockToString = "In stoc furnizor";
+        }
 
         nameTextView.setText(name);
-        categoryTextView.setText(categoryToString);
+        categoryTextView.setText(categoryToDisplay);
         priceTextView.setText(priceToString);
         stockTextView.setText(stockToString);
         imageView.setImageResource(imageResourceId);

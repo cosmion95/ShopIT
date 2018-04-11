@@ -9,7 +9,7 @@
     <ListView
         android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="500dp"
         android:id="@+id/cos_list_view"
         />
 
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="1540 RON"
-        android:id="@+id/cos_pret_produse"
+        android:id="@+id/cos_item_cost"
         android:layout_below="@id/cos_list_view"
         />
 
@@ -27,20 +27,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="25 RON"
-        android:id="@+id/cos_cost_livrare"
-        android:layout_below="@id/cos_pret_produse"
+        android:id="@+id/cos_delivery_cost"
+        android:layout_below="@id/cos_item_cost"
         />
 
     <TextView
-        android:padding="15dp"
+        android:paddingTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/cos_pret_total"
+        android:id="@+id/cos_total_price"
         tools:text="1565 RON"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/cos_delivery_cost"/>
 
     <Button
+        android:id="@+id/cos_send_order"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="COMANDA"

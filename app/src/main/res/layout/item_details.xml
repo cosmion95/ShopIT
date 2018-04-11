@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        tools:src="@drawable/laptop_lenovo_3"
+        tools:src="@drawable/laptop1"
         android:id="@+id/item_details_image"/>
 
     <TextView
