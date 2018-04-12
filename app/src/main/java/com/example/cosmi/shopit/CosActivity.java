@@ -52,6 +52,7 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
     int totalPrice;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,69 +93,14 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         totalPriceTextView.setText(totalPriceString);
 
 
+
+
         //setting up the order button
         orderButton = findViewById(R.id.cos_send_order);
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //get the dialog prompt view
-                LayoutInflater li = LayoutInflater.from(context);
-                 View promptDialog = li.inflate(R.layout.activity_prompt_dialog, null);
-
-                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        context);
-
-                alertDialogBuilder.setView(promptDialog);
-
-                final EditText emailEditText = promptDialog.findViewById(R.id.prompt_dialog_email_adress);
-
-
-
-                //set the dialog message
-                alertDialogBuilder.setCancelable(false);
-
-                //set the ok button and check for valid email adress
-
-                    alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //get the user input
-                            String checkEmail = emailEditText.getText().toString().trim();
-                            boolean validEmail = isValidEmail(checkEmail);
-                            if (!validEmail){
-                                Toast.makeText(context, "Please enter a valid email adress", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                            else {
-                                String items = getItems();
-                                String orderMessage = "Comanda ta la ShopIT a fost preluata:\n" + items + " Total: " + totalPrice + " RON.";
-                                emailAdress = checkEmail;
-                                Intent email = new Intent(Intent.ACTION_SEND);
-                                email.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAdress});
-                                email.putExtra(Intent.EXTRA_SUBJECT, "ShopIT Order");
-                                email.putExtra(Intent.EXTRA_TEXT, orderMessage);
-                                email.setType("message/rfc822");
-                                startActivity(Intent.createChooser(email, "Choose an Email client :"));
-                            }
-                            Log.e("tag", "email adress from user input is: " + emailAdress);
-                        }
-                    });
-
-                //set the cancel button
-                alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                //create the alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-
-                // show it
-                alertDialog.show();
-
+                orderButton();
             }
         });
 
@@ -281,5 +227,64 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
        Log.e("tag","returned items are: " + items);
       return items;
+    }
+
+    private void orderButton(){
+        //get the dialog prompt view
+        LayoutInflater li = LayoutInflater.from(context);
+        View promptDialog = li.inflate(R.layout.activity_prompt_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                context);
+
+        alertDialogBuilder.setView(promptDialog);
+
+        final EditText emailEditText = promptDialog.findViewById(R.id.prompt_dialog_email_adress);
+
+
+
+        //set the dialog message
+        alertDialogBuilder.setCancelable(false);
+
+        //set the ok button and check for valid email adress
+
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //get the user input
+                String checkEmail = emailEditText.getText().toString().trim();
+                boolean validEmail = isValidEmail(checkEmail);
+                if (!validEmail){
+                    Toast.makeText(context, "Please enter a valid email adress", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else {
+                    String items = getItems();
+                    String orderMessage = "Comanda ta la ShopIT a fost preluata:\n" + items + " Total: " + totalPrice + " RON.";
+                    emailAdress = checkEmail;
+                    Intent email = new Intent(Intent.ACTION_SEND);
+                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAdress});
+                    email.putExtra(Intent.EXTRA_SUBJECT, "ShopIT Order");
+                    email.putExtra(Intent.EXTRA_TEXT, orderMessage);
+                    email.setType("message/rfc822");
+                    startActivity(Intent.createChooser(email, "Choose an Email client :"));
+                }
+                Log.e("tag", "email adress from user input is: " + emailAdress);
+            }
+        });
+
+        //set the cancel button
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        //create the alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 }

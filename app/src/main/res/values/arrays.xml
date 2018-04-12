@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="array_category_options">
+        <item>Laptops</item>
+        <item>Desktops</item>
+        <item>Mice</item>
+        <item>Keyboards</item>
+        <item>Headphones</item>
+        <item>Monitors</item>
+    </string-array>
+
+    <string-array name="array_image_options">
+        <item>Laptop1</item>
+        <item>Laptop2</item>
+        <item>Desktop1</item>
+        <item>Desktop2</item>
+        <item>Mice1</item>
+        <item>Mice2</item>
+        <item>Keyboard1</item>
+        <item>Keyboard2</item>
+        <item>Headphones1</item>
+        <item>Headphones2</item>
+        <item>Monitor1</item>
+        <item>Monitor2</item>
+    </string-array>
+
+</resources>
