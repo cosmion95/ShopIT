@@ -2,6 +2,7 @@ package com.example.cosmi.shopit;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,13 @@ import static android.content.ContentValues.TAG;
 public class CosCursorAdapter extends CursorAdapter {
 
     private int totalPrice = 0;
-    ArrayList idList = new ArrayList<>();
+    private CosCursorAdapter cosCursorAdapter;
+
 
     //construct a new ItemCursorAdapter
     public CosCursorAdapter(Context context, Cursor c){
         super(context,c,0);
+        cosCursorAdapter = this;
     }
 
 
@@ -47,7 +50,6 @@ public class CosCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, final Context context, final Cursor cursor) {
 
-        final CosCursorAdapter cosCursorAdapter = this;
 
         //find all the list views
         ImageView imageView = view.findViewById(R.id.cos_item_image);
@@ -70,17 +72,6 @@ public class CosCursorAdapter extends CursorAdapter {
       //  Log.e("tag","actual qty is: " + qty);
 
 
-        //calculating the total price
-        int idToAdd = cursor.getInt(idPosition);
-       // Log.e("tag","current id is:" + idToAdd);
-        while (!idList.contains(idToAdd)){
-            Log.e("tag","id was not in idList");
-            idList.add(idToAdd);
-            Log.e("tag","current list is: " + idList);
-            int priceWithQty = price * qty;
-            totalPrice += priceWithQty;
-          //  Log.e("tag", "total price currently is: " + totalPrice);
-        }
 
         Button increaseQty = view.findViewById(R.id.cos_item_increase_qty);
         increaseQty.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +91,6 @@ public class CosCursorAdapter extends CursorAdapter {
                 //Log.e("tag","button pressed, current item id is: " + id);
                 if (rowsAffected != 0){
                    Toast.makeText(context, "Qty in DB increased succesfully",Toast.LENGTH_SHORT).show();
-                   changeCursor(cursor);
-                   notifyDataSetChanged();
 
                 }
                 else {
