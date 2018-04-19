@@ -49,7 +49,7 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
     private int imageResourceId;
 
     private long userId = -1;
-    int isAdmin;
+    private int isAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
