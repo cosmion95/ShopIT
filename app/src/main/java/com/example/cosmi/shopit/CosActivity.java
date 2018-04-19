@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosmi.shopit.data.CosContract;
+import com.example.cosmi.shopit.data.ItemContract;
 import com.example.cosmi.shopit.data.UserContract;
 
 /**
@@ -71,10 +72,22 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
         //find the list view to display the items
         listView = findViewById(R.id.cos_list_view);
+
+        //set the empty view for when the cos is empty
+        View emptyView = findViewById(R.id.cos_empty_view);
+        listView.setEmptyView(emptyView);
+
         cosCursorAdapter = new CosCursorAdapter(this, null);
         listView.setAdapter(cosCursorAdapter);
 
-        //get the prices views
+        //check to see if listview(aka cos) is empty
+        if (cosCursorAdapter.isEmpty()) {
+            Log.e("tag","listview is EMPTY");
+        }
+        else {
+            Log.e("tag","listview is NOT EMPTY");
+        }
+
         TextView itemPriceTextView = findViewById(R.id.cos_item_cost);
         TextView deliveryPriceTextView = findViewById(R.id.cos_delivery_cost);
         TextView totalPriceTextView = findViewById(R.id.cos_total_price);
@@ -94,6 +107,11 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
 
 
+//        if (cosCursorAdapter == null) {
+//            itemPriceTextView.setVisibility(View.INVISIBLE);
+//            deliveryPriceTextView.setVisibility(View.INVISIBLE);
+//            totalPriceTextView.setVisibility(View.INVISIBLE);
+//        }
 
         //setting up the order button
         orderButton = findViewById(R.id.cos_send_order);
@@ -203,10 +221,11 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
 
 
     private String getItems(){
-        String items="";
+        String items = "";
 
         String[] projection = {
-                CosContract.CosEntry.COLUMN_NAME
+                CosContract.CosEntry.COLUMN_NAME,
+                CosContract.CosEntry.COLUMN_QTY
         };
         String stringUserID = String.valueOf(userId);
         String whereClause = CosContract.CosEntry.COLUMN_USERID + " = ?";
@@ -220,13 +239,72 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
             if (itemsCursor.moveToFirst())
             {
                 do {
-                    items += itemsCursor.getString(0) + "\n";
+
+                    int namePosition = itemsCursor.getColumnIndex(CosContract.CosEntry.COLUMN_NAME);
+                    int qtyPosition = itemsCursor.getColumnIndex(CosContract.CosEntry.COLUMN_QTY);
+
+
+
+
+                    String itemName = itemsCursor.getString(namePosition).trim();
+                    int itemQty = itemsCursor.getInt(qtyPosition);
+
+                    boolean isInStoc = checkStoc(itemName, itemQty);
+
+                    if (isInStoc) {
+                        items += itemName + "     buc: " + itemQty + "\n";
+                    }
+                    else {
+                        return null;
+                    }
+
                 } while (itemsCursor.moveToNext());
             }
         }
 
        Log.e("tag","returned items are: " + items);
       return items;
+    }
+
+
+    private boolean checkStoc(String itemName, int itemQty){
+        boolean isInStoc = false;
+
+        String[] projection = {
+                ItemContract.ItemEntry.COLUMN_NAME,
+                ItemContract.ItemEntry.COLUMN_STOCK
+        };
+        String whereClause = ItemContract.ItemEntry.COLUMN_NAME + " = ?";
+        String[] whereArgs = new String[] { itemName };
+        Cursor checkCursor = getContentResolver().query(ItemContract.ItemEntry.CONTENT_URI, projection, whereClause, whereArgs, null);
+
+        if(checkCursor!=null && checkCursor.moveToFirst())
+        {
+            int namePosition = checkCursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_NAME);
+            int stocPosition = checkCursor.getColumnIndex(ItemContract.ItemEntry.COLUMN_STOCK);
+            String checkName = checkCursor.getString(namePosition);
+            int checkStoc = checkCursor.getInt(stocPosition);
+
+            Log.e("tag","item name is: " + itemName + ", check name is: " + checkName);
+
+            if (itemName.equals(checkName)) {
+                if (itemQty <= checkStoc){
+                    //items are in stoc
+                    isInStoc = true;
+
+                    //new value to update the stoc
+                    int newItemStoc = checkStoc - itemQty;
+                    decreaseItemStoc(itemName, newItemStoc);
+
+
+                        }
+            }
+
+        }
+        else {
+            Log.e("tag", "cursor is null or might not containt any data");
+        }
+        return isInStoc;
     }
 
     private void orderButton(){
@@ -260,14 +338,26 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
                 }
                 else {
                     String items = getItems();
-                    String orderMessage = "Comanda ta la ShopIT a fost preluata:\n" + items + " Total: " + totalPrice + " RON.";
-                    emailAdress = checkEmail;
-                    Intent email = new Intent(Intent.ACTION_SEND);
-                    email.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAdress});
-                    email.putExtra(Intent.EXTRA_SUBJECT, "ShopIT Order");
-                    email.putExtra(Intent.EXTRA_TEXT, orderMessage);
-                    email.setType("message/rfc822");
-                    startActivity(Intent.createChooser(email, "Choose an Email client :"));
+
+                    if (items != null) {
+
+                        //todo REMOVE ITEMS FROM COS
+                        emptyUserCos();
+
+
+                        String orderMessage = "Comanda ta la ShopIT a fost preluata:\n" + items + " Total: " + totalPrice + " RON.";
+                        emailAdress = checkEmail;
+                        Intent email = new Intent(Intent.ACTION_SEND);
+                        email.putExtra(Intent.EXTRA_EMAIL, new String[]{emailAdress});
+                        email.putExtra(Intent.EXTRA_SUBJECT, "ShopIT Order");
+                        email.putExtra(Intent.EXTRA_TEXT, orderMessage);
+                        email.setType("message/rfc822");
+                        startActivity(Intent.createChooser(email, "Choose an Email client :"));
+                    }
+                    else {
+                        Toast.makeText(context, "Item may not be in stoc", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
                 Log.e("tag", "email adress from user input is: " + emailAdress);
             }
@@ -287,4 +377,24 @@ public class CosActivity extends AppCompatActivity implements LoaderManager.Load
         // show it
         alertDialog.show();
     }
+
+    private void emptyUserCos() {
+        String userIDString = String.valueOf(userId);
+        String whereClause = CosContract.CosEntry.COLUMN_USERID + " = ?";
+        String[] whereArgs = new String[] { userIDString };
+        getContentResolver().delete(CosContract.CosEntry.COS_CONTENT_URI,whereClause,whereArgs);
+    }
+
+    private void decreaseItemStoc(String itemName, int newItemStoc){
+
+        ContentValues values = new ContentValues();
+        values.put(ItemContract.ItemEntry.COLUMN_STOCK, newItemStoc);
+
+        String whereClause = ItemContract.ItemEntry.COLUMN_NAME + " = ?";
+        String[] whereArgs = new String[] { itemName };
+
+        getContentResolver().update(ItemContract.ItemEntry.CONTENT_URI, values, whereClause, whereArgs);
+
+        }
+
 }

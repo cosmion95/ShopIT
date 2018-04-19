@@ -41,7 +41,12 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private Uri currentItemUri;
 
-    int imageResourceId;
+    private String name;
+    private int category;
+    private int price;
+    private int stoc;
+
+    private int imageResourceId;
 
     private long userId = -1;
     int isAdmin;
@@ -110,18 +115,57 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
         int descriptionPosition = data.getColumnIndex(ItemContract.ItemEntry.COLUMN_DESCRIPTION);
         int imagePosition = data.getColumnIndex(ItemContract.ItemEntry.COLUMN_IMAGE);
 
-        int category = data.getInt(categoryPosition);
-        int price = data.getInt(pricePosition);
-        int stock = data.getInt(stockPosition);
+        category = data.getInt(categoryPosition);
+        price = data.getInt(pricePosition);
+        stoc = data.getInt(stockPosition);
         imageResourceId = data.getInt(imagePosition);
 
-        String nameToDisplay = data.getString(namePosition);
-        String categoryToDisplay = String.valueOf(category);
-        String priceToDisplay = String.valueOf(price);
-        String stockToDisplay = String.valueOf(stock);
-        String descriptionToDisplay = data.getString(descriptionPosition);
 
-        detailsNameView.setText(nameToDisplay);
+        //get the name of the item
+        name = data.getString(namePosition);
+
+        //get the category of the item
+        String categoryToDisplay = "Categorie: ";
+        switch (category){
+            case 0:
+                categoryToDisplay += "Laptops";
+                break;
+            case 1:
+                categoryToDisplay += "Desktops";
+                break;
+            case 2:
+                categoryToDisplay += "Mice";
+                break;
+            case 3:
+                categoryToDisplay += "Keyboards";
+                break;
+            case 4:
+                categoryToDisplay += "Headphones";
+                break;
+            case 5:
+                categoryToDisplay += "Monitors";
+                break;
+        }
+
+        //get the price of the item
+        String priceToDisplay = "Pret: " + price + " RON";
+
+        //get the stoc info
+        String stockToDisplay = "";
+        if (stoc > 10) {
+            stockToDisplay = "In stoc magazin";
+        }
+        else if (stoc == 0) {
+            stockToDisplay = "Nu este in stoc";
+        }
+        else {
+            stockToDisplay = "In stoc furnizor";
+        }
+
+
+        String descriptionToDisplay = "Descriere: \n" + data.getString(descriptionPosition);
+
+        detailsNameView.setText(name);
         detailsStockView.setText(stockToDisplay);
         detailsPriceView.setText(priceToDisplay);
         detailsCategoryView.setText(categoryToDisplay);
@@ -137,14 +181,14 @@ public class DetailsActivity extends AppCompatActivity implements LoaderManager.
 
     private void insertItem() {
         String itemName = detailsNameView.getText().toString().trim();
-        String itemPrice = detailsPriceView.getText().toString().trim();
+        String itemPrice = String.valueOf(price);
         String qty = String.valueOf(1);
         String userID = String.valueOf(userId);
 
 
         ContentValues values = new ContentValues();
-        values.put(CosContract.CosEntry.COLUMN_NAME, itemName);
-        values.put(CosContract.CosEntry.COLUMN_PRICE, itemPrice);
+        values.put(CosContract.CosEntry.COLUMN_NAME, name);
+        values.put(CosContract.CosEntry.COLUMN_PRICE, price);
         values.put(CosContract.CosEntry.COLUMN_QTY, qty);
         values.put(CosContract.CosEntry.COLUMN_USERID, userID);
         values.put(CosContract.CosEntry.COLUMN_IMAGE, imageResourceId);

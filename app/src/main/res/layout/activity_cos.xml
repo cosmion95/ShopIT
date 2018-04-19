@@ -48,4 +48,12 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="It's cold in here"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/cos_empty_view"/>
+
 </RelativeLayout>

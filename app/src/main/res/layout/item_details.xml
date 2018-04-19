@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp">
 
 
@@ -30,49 +32,57 @@
         android:layout_height="wrap_content"
         android:text="In stoc magazin"
         android:id="@+id/item_details_stock"
-        android:layout_below="@id/item_details_name"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="1199.99 RON"
-        android:id="@+id/item_details_price"
         android:layout_below="@id/item_details_name"
-        android:layout_toRightOf="@id/item_details_stock"
-        android:padding="10dp"/>
+        android:background="#90A4AE"/>
 
     <TextView
-        android:padding="5dp"
-        android:layout_width="wrap_content"
+        android:id="@+id/item_details_price"
+        android:layout_width="191dp"
         android:layout_height="wrap_content"
-        android:id="@+id/item_details_category"
-        tools:text="Categorie: laptops"
-        android:layout_below="@id/item_details_stock"/>
-
-    <TextView
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/item_details_name"
+        android:background="#90A4AE"
         android:padding="10dp"
-        android:layout_width="match_parent"
+        tools:text="1199.99 RON" />
+
+    <TextView
+        android:id="@+id/item_details_category"
+        android:layout_width="401dp"
         android:layout_height="wrap_content"
+        android:layout_below="@id/item_details_stock"
+        android:background="#CFD8DC"
+        android:padding="5dp"
+        android:textColor="#B4BAC0"
+        tools:text="Categorie: laptops" />
+
+
+    <TextView
         android:id="@+id/item_details_description"
+        android:layout_width="match_parent"
+        android:layout_height="285dp"
         android:layout_below="@id/item_details_category"
-        tools:text="blablabla
+        android:background="#B0BEC5"
+        android:padding="10dp"
+        tools:text="Descriere:
+        blablabla
      blablablablalblalblalblalblalb
      llblalblalb
      lalblalblalb
      lalblalblalblal
      balblalblalblalblalbla
-     lvlaslakwdla"
-        />
+     lvlaslakwdla" />
 
     <android.support.design.widget.FloatingActionButton
+
         android:id="@+id/item_details_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_add_pet"
-        android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/fab_add_nobackground"
         android:visibility="invisible"/>
+
 
 </RelativeLayout>

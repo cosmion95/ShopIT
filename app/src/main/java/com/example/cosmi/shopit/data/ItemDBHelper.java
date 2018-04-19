@@ -159,4 +159,26 @@ public class ItemDBHelper extends SQLiteOpenHelper {
 
     }
 
+    public int getItemStoc(String name){
+
+        SQLiteDatabase sqLiteDatabase = this.getReadableDatabase();
+        String[] tableColumns = new String[] { ItemEntry.COLUMN_STOCK };
+        String whereClause = ItemEntry.COLUMN_NAME + " = ?";
+        String[] whereArgs = new String[] { name };
+
+        int itemStoc = -1;
+
+        Cursor cursor = sqLiteDatabase.query(ItemEntry.TABLE_NAME, tableColumns, whereClause, whereArgs, null, null, null);
+        if (cursor != null && cursor.moveToFirst()) {
+
+            int stocIndex = cursor.getColumnIndex(ItemEntry.COLUMN_STOCK);
+            itemStoc = cursor.getInt(stocIndex);
+
+        }
+        else {
+            Log.e("tag","cursor might be null or empty");
+        }
+        return itemStoc;
+    }
+
 }

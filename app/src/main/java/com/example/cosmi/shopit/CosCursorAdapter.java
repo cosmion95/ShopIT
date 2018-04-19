@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cosmi.shopit.data.CosContract;
+import com.example.cosmi.shopit.data.ItemContract;
 import com.example.cosmi.shopit.data.ItemDBHelper;
 
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class CosCursorAdapter extends CursorAdapter {
         TextView nameTextView = view.findViewById(R.id.cos_item_name);
         final TextView qtyTextView = view.findViewById(R.id.cos_item_qty);
         TextView priceTextView =  view.findViewById(R.id.cos_item_price);
+        TextView stocTextView = view.findViewById(R.id.cos_item_stoc);
 
         //find all the item information from the db using the cursor
         int idPosition = cursor.getColumnIndex(CosContract.CosEntry._ID);
@@ -64,12 +66,19 @@ public class CosCursorAdapter extends CursorAdapter {
         int qtyPosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_QTY);
         int imagePosition = cursor.getColumnIndex(CosContract.CosEntry.COLUMN_IMAGE);
 
+
+
         final String name = cursor.getString(namePosition);
         final int qty = cursor.getInt(qtyPosition);
         Integer price = cursor.getInt(pricePosition);
         final Integer imageResourceId = cursor.getInt(imagePosition);
         final Long id = cursor.getLong(idPosition);
-      //  Log.e("tag","actual qty is: " + qty);
+
+
+        //get stoc info for current item
+        ItemDBHelper itemDBHelper = new ItemDBHelper(context);
+        int stoc = itemDBHelper.getItemStoc(name);
+
 
 
 
@@ -108,7 +117,6 @@ public class CosCursorAdapter extends CursorAdapter {
                     ItemDBHelper itemDBHelper = new ItemDBHelper(context);
                     //get the quantity that we want to decrease
                     int qtyToDecrease = qty;
-                    // increase quantity by 1
                 //    Log.e("tag", "qty before decrease: " + qtyToDecrease);
                     qtyToDecrease--;
                  //   Log.e("tag", "qty after decrease: " + qtyToDecrease);
@@ -148,16 +156,18 @@ public class CosCursorAdapter extends CursorAdapter {
 
         String priceToString = "Pret: " + price + " RON";
         String qtyToString = "Cantitate: " + qty;
+        String stocToString = "Stoc magazin: " + stoc;
+
 
         nameTextView.setText(name);
         qtyTextView.setText(qtyToString);
         priceTextView.setText(priceToString);
         imageView.setImageResource(imageResourceId);
+        stocTextView.setText(stocToString);
+
+
 
     }
 
-    public int getTotalPrice(){
-        return totalPrice;
-    }
 
 }

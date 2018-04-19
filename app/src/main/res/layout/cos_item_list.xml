@@ -12,6 +12,15 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
+        <TextView
+            android:padding="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cos_item_stoc"
+            android:layout_below="@id/cos_item_decrease_qty"
+            tools:text="Stoc magazin : 5"
+            android:layout_toRightOf="@id/cos_item_image"/>
+
         <ImageView
             android:focusable="false"
             android:id="@+id/cos_item_image"
@@ -67,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1199.99 RON"
-            android:layout_below="@id/cos_item_decrease_qty"
+            android:layout_below="@id/cos_item_stoc"
             android:layout_toRightOf="@id/cos_item_image"
             android:padding="5dp"/>
 
